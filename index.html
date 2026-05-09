@@ -802,5 +802,68 @@
   <span class="footer-loc">Lagos, Nigeria · samuelogbangwo62g@gmail.com · +234-807-789-5575</span>
 </footer>
 
+<style>
+  .footer-views {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(201,168,130,0.55);
+    letter-spacing: 0.08em;
+  }
+  .views-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.7;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.35); }
+  }
+  #view-count {
+    color: var(--accent-light);
+    font-weight: 500;
+  }
+  @media (max-width: 800px) {
+    .footer-views { justify-content: center; }
+  }
+</style>
+ 
+<script>
+  // ── Portfolio view counter using countapi.xyz (free, no signup) ──
+  // Each unique page load increments the counter for this portfolio.
+  // The namespace + key combo uniquely identifies Samuel Ogbangwo's portfolio.
+  (async () => {
+    const el = document.getElementById('view-count');
+    const NAMESPACE = 'samuel-og-portfolio';
+    const KEY       = 'page-views';
+ 
+    try {
+      // hit() increments by 1 and returns the new total
+      const res  = await fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`);
+      const data = await res.json();
+      if (data && typeof data.value === 'number') {
+        // animate count up from 0 to actual value (capped at 60 frames)
+        const target = data.value;
+        const steps  = Math.min(target, 60);
+        const step   = Math.ceil(target / steps);
+        let current  = Math.max(0, target - steps * step);
+        const tick   = setInterval(() => {
+          current = Math.min(current + step, target);
+          el.textContent = current.toLocaleString();
+          if (current >= target) clearInterval(tick);
+        }, 25);
+      } else {
+        el.textContent = '—';
+      }
+    } catch {
+      el.textContent = '—';
+    }
+  })();
+</script>
+
 </body>
 </html>
