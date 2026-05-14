@@ -797,11 +797,24 @@
 </main>
 
 <!-- ══ FOOTER ══════════════════════════════════════════ -->
+<!-- ══ FOOTER ══════════════════════════════════════════ -->
 <footer>
-  <span class="footer-name">Samuel Ogbangwo</span>
-  <span class="footer-loc">Lagos, Nigeria · samuelogbangwo62g@gmail.com · +234-807-789-5575</span>
-</footer>
+  <div>
+    <span class="footer-name">Samuel Ogbangwo</span><br>
+    <span class="footer-loc">
+      Lagos, Nigeria · samuelogbangwo62g@gmail.com · +234-807-789-5575
+    </span>
+  </div>
 
+  <!-- VIEW COUNTER -->
+  <div class="footer-views">
+    <span class="views-dot"></span>
+    <span>
+      Portfolio Views:
+      <span id="view-count">0</span>
+    </span>
+  </div>
+</footer>
 <style>
   .footer-views {
     display: flex;
@@ -833,36 +846,32 @@
 </style>
  
 <script>
-  // ── Portfolio view counter using countapi.xyz (free, no signup) ──
-  // Each unique page load increments the counter for this portfolio.
-  // The namespace + key combo uniquely identifies Samuel Ogbangwo's portfolio.
-  (async () => {
-    const el = document.getElementById('view-count');
-    const NAMESPACE = 'samuel-og-portfolio';
-    const KEY       = 'page-views';
- 
-    try {
-      // hit() increments by 1 and returns the new total
-      const res  = await fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`);
-      const data = await res.json();
-      if (data && typeof data.value === 'number') {
-        // animate count up from 0 to actual value (capped at 60 frames)
-        const target = data.value;
-        const steps  = Math.min(target, 60);
-        const step   = Math.ceil(target / steps);
-        let current  = Math.max(0, target - steps * step);
-        const tick   = setInterval(() => {
-          current = Math.min(current + step, target);
-          el.textContent = current.toLocaleString();
-          if (current >= target) clearInterval(tick);
-        }, 25);
-      } else {
-        el.textContent = '—';
-      }
-    } catch {
+(async () => {
+  const el = document.getElementById('view-count');
+
+  // stop if element doesn't exist
+  if (!el) return;
+
+  const NAMESPACE = 'samuel-og-portfolio';
+  const KEY = 'page-views';
+
+  try {
+    const res = await fetch(
+      `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`
+    );
+
+    const data = await res.json();
+
+    if (data && typeof data.value === 'number') {
+      el.textContent = data.value.toLocaleString();
+    } else {
       el.textContent = '—';
     }
-  })();
+  } catch (err) {
+    console.error(err);
+    el.textContent = '—';
+  }
+})();
 </script>
 
 </body>
